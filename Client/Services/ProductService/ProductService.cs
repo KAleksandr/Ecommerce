@@ -9,7 +9,7 @@ namespace Ecommerce.Client.Services.ProductService
         {
             _http = http;
         }
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; } = new List<Product>();   
 
         public async Task GetProducts()
         {
@@ -19,5 +19,12 @@ namespace Ecommerce.Client.Services.ProductService
             }
            
         }
+        public async Task<ServiceResponse<Product>> GetProduct(int productId)
+        {
+            var result = await _http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{productId}");
+           
+            return result;
+        }
+        
     }
 }
