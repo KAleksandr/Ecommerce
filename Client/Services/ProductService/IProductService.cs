@@ -1,5 +1,4 @@
 ﻿
-
 namespace Ecommerce.Client.Services.ProductService
 {
     public interface IProductService

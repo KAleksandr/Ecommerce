@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ecommerce.Shared.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Server.Controllers
 {

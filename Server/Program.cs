@@ -1,4 +1,5 @@
 global using Ecommerce.Shared;
+global using Ecommerce.Shared.Model;
 global using Microsoft.EntityFrameworkCore;
 global using Ecommerce.Server.Data;
 global using Ecommerce.Server.Services.ProductService;

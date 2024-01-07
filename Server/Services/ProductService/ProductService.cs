@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Server.Services.ProductService
+﻿using Ecommerce.Shared.Model;
+
+namespace Ecommerce.Server.Services.ProductService
 {
     public class ProductService : IProductService
     {
