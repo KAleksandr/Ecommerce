@@ -1,7 +1,9 @@
 global using Ecommerce.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using Ecommerce.Server.Data;
+global using Ecommerce.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;
+
 
 namespace Ecommerce
 {
@@ -19,6 +21,8 @@ namespace Ecommerce
             builder.Services.AddRazorPages();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
             var app = builder.Build();
             app.UseSwaggerUI();
             // Configure the HTTP request pipeline.
