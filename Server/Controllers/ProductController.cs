@@ -23,11 +23,16 @@ namespace Ecommerce.Server.Controllers
             var result = await _productService.GetProductsAsync();
             return Ok(result);
         }
-        [HttpGet("{productId}")]
-        
+        [HttpGet("{productId}")]        
         public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
         {
             var result = await _productService.GetProductAsync(productId);
+            return Ok(result);
+        }
+        [HttpGet("category/{categoryUrl}")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductsByCategory(string categoryUrl)
+        {
+            var result = await _productService.GetProductsByCategory(categoryUrl);
             return Ok(result);
         }
     }
