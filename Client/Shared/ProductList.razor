@@ -4,9 +4,10 @@
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
 {
     <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading products...</span>
-        </div>
+        <span>@ProductService.Message</span>
+        @* <div class="spinner-border" role="status">
+            <span class="visually-hidden">@ProductService.Message</span>
+        </div> *@
     </div>
    
     
