@@ -16,7 +16,7 @@
             <option>@suggestion</option>
         }
     </datalist>
-    <div class="btn btn-primary m-0" @onclick="SearchProducts">
+    <div class="btn btn-primary m-0 p-2" @onclick="SearchProducts">
         <span class="oi oi-magnifying-glass"></span>
     </div>
 </div>
@@ -32,7 +32,7 @@
         }
     }
     public void SearchProducts() {
-        NavigationManager.NavigateTo($"search/{searchText}");
+        NavigationManager.NavigateTo($"search/{searchText}/1");
     }
     public async Task HandleSearch(KeyboardEventArgs args){
         if(args.Key == null || args.Key.Equals("Enter"))

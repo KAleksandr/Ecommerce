@@ -1,0 +1,38 @@
+﻿.conteiner {
+    display: flex;
+    padding: 6px;
+}
+.image-wrapper{
+    width: 150px;
+    text-align: center;
+}
+.image{
+    width: 150px;
+    text-align: center;
+    padding: 6px;
+}
+.name{
+    flex-grow: 1;
+    padding: 6px;
+}
+.cart-product-price{
+    font-weight: 600;
+    text-align: right;
+}
+.btn-delete {
+    background: darkred;
+    color: white;
+    /*border: none;*/
+    padding: 6;
+    font-size: 12px;
+    cursor: pointer;
+}
+.btn-delete:hover{
+    text-decoration: underline;
+}
+    .btn-del{
+        margin:4px 0px 0px 0px;
+    }
+    .input-quantity {
+        width: 70px;
+    }

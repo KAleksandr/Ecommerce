@@ -1,10 +1,12 @@
 global using Ecommerce.Shared;
+global using Ecommerce.Shared.DTO;
 global using Ecommerce.Shared.Model;
 global using Microsoft.EntityFrameworkCore;
 global using Ecommerce.Server.Data;
 global using Ecommerce.Server.Services.ProductService;
 global using Ecommerce.Server.Services.CategoryService;
-using Microsoft.AspNetCore.ResponseCompression;
+global using Ecommerce.Server.Services.CartService;
+
 
 
 namespace Ecommerce
@@ -25,6 +27,7 @@ namespace Ecommerce
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             var app = builder.Build();
             app.UseSwaggerUI();
