@@ -3,10 +3,12 @@ global using Ecommerce.Shared.Model;
 global using System.Net.Http.Json;
 global using Ecommerce.Client.Services.ProductService;
 global using Ecommerce.Client.Services.CategoryService;
+global using Ecommerce.Client.Services.CartService;
+global using Ecommerce.Client.Services.AuthService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Blazored.LocalStorage;
-using Ecommerce.Client.Services.CartService;
+
 
 namespace Ecommerce.Client
 {
@@ -18,11 +20,12 @@ namespace Ecommerce.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
             builder.Services.AddBlazoredLocalStorage();
-
+           
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IProductService, ProductService>();  
             builder.Services.AddScoped<ICategoryService, CategoryService>();  
             builder.Services.AddScoped<ICartService, CartService>();  
+            builder.Services.AddScoped<IAuthService, AuthService>();  
             await builder.Build().RunAsync();
         }
     }

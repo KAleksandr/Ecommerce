@@ -6,6 +6,7 @@ global using Ecommerce.Server.Data;
 global using Ecommerce.Server.Services.ProductService;
 global using Ecommerce.Server.Services.CategoryService;
 global using Ecommerce.Server.Services.CartService;
+global using Ecommerce.Server.Services.AuthService;
 
 
 
@@ -28,6 +29,7 @@ namespace Ecommerce
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var app = builder.Build();
             app.UseSwaggerUI();
