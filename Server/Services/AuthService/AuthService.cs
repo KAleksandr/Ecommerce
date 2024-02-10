@@ -18,7 +18,6 @@ namespace Ecommerce.Server.Services.AuthService
             _context = context;
             _configuration = configuration;
         }
-
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
             var response = new ServiceResponse<string>();
@@ -28,39 +27,83 @@ namespace Ecommerce.Server.Services.AuthService
                 response.Success = false;
                 response.Message = "User not found";
             }
-            else if(!VerifyPasswordHAsh(password, user.PasswordHash, user.PasswordSalt))
+            else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
-                response.Message = "Wrong passsword.";
+                response.Message = "Wrong password.";
             }
             else
             {
                 response.Success = true;
-                response.Data = CreateToken(user);
+                response.Data = CreateToken(user); // Отримуємо токен і зберігаємо в полі Data
             }
-                
-          
+
             return response;
         }
+        //public async Task<ServiceResponse<string>> Login(string email, string password)
+        //{
+        //    var response = new ServiceResponse<string>();
+        //    var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+        //    if (user == null)
+        //    {
+        //        response.Success = false;
+        //        response.Message = "User not found";
+        //    }
+        //    else if(!VerifyPasswordHAsh(password, user.PasswordHash, user.PasswordSalt))
+        //    {
+        //        response.Success = false;
+        //        response.Message = "Wrong passsword.";
+        //    }
+        //    else
+        //    {
+        //        response.Success = true;
+        //        response.Data = CreateToken(user);
+        //    }
 
-        private string? CreateToken(User user)
+
+        //    return response;
+        //}
+        private string CreateToken(User user)
         {
-            
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Email)                
+                new Claim(ClaimTypes.Name, user.Email)
+               
             };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+               _configuration.GetSection("AppSettings:Token").Value));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
-                claims:claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
+                                   claims: claims,
+                                   expires: DateTime.UtcNow.AddDays(1),
+                                   signingCredentials: cred
+   );
+                        
+
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
             return jwt;
         }
+
+        //private string? CreateToken(User user)
+        //{
+
+        //    List<Claim> claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        //        new Claim(ClaimTypes.Name, user.Email)                
+        //    };
+        //    var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        //    var token = new JwtSecurityToken(
+        //        claims:claims,
+        //        expires: DateTime.Now.AddDays(1),
+        //        signingCredentials: creds);
+        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        //    return jwt;
+        //}
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
@@ -98,22 +141,43 @@ namespace Ecommerce.Server.Services.AuthService
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using(var hmac = new HMACSHA512())
+            using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                passwordHash = hmac
+                    .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-        private bool VerifyPasswordHAsh(string password, byte[] passwordHash, byte[] passwordSalt)
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-           
             using (var hmac = new HMACSHA512(passwordSalt))
             {
-               
-              var  passwordHashG = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return passwordHash.SequenceEqual(passwordHashG); 
+                var computedHash =
+                    hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
             }
-           
         }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return new ServiceResponse<bool> { Success = false, Message ="User not found" };
+            }
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = "Password has been changed."
+            };
+        }
+        
     }
 }

@@ -2,6 +2,7 @@
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
 <h3>Login</h3>
@@ -25,7 +26,13 @@
 @code {
     private UserLogin user = new UserLogin();
     private string errorMessage = string.Empty;
-
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string returnUrl { get; set; } = string.Empty;
+    // protected override void OnInitialized()
+    // {
+    //     var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+    // }
     async Task HandleLogin()
     {
 
@@ -34,7 +41,17 @@
         {
             errorMessage = "";
             await LocalStorage.SetItemAsync("authToken", result.Data);
-            NavigationManager.NavigateTo("");
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            try
+            {
+                NavigationManager.NavigateTo(returnUrl);
+            }
+            catch
+            {
+                NavigationManager.NavigateTo("");
+            }
+
         }
         else
         {
