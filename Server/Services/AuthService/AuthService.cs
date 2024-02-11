@@ -152,31 +152,32 @@ namespace Ecommerce.Server.Services.AuthService
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash =
-                    hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
+            {               
+              var  passwordHashG = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return passwordHash.SequenceEqual(passwordHashG); 
             }
+           
         }
-
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
-                return new ServiceResponse<bool> { Success = false, Message ="User not found" };
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
             }
+
             CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             await _context.SaveChangesAsync();
-            return new ServiceResponse<bool>
-            {
-                Data = true,
-                Success = true,
-                Message = "Password has been changed."
-            };
+
+            return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
         
     }

@@ -41,10 +41,12 @@ namespace Ecommerce.Server.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var response = await _authService.ChangePassword(int.Parse(userId), newPassword);
+
             if (!response.Success)
             {
-                BadRequest(response);
+                return BadRequest(response);
             }
+
             return Ok(response);
         }
     }

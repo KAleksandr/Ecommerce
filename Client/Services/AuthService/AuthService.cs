@@ -1,4 +1,7 @@
 ﻿
+using System.Net.Http;
+using static System.Net.WebRequestMethods;
+
 namespace Ecommerce.Client.Services.AuthService
 {
     public class AuthService : IAuthService
@@ -9,14 +12,11 @@ namespace Ecommerce.Client.Services.AuthService
         {
             _httpClient = httpClient;
         }
-
         public async Task<ServiceResponse<bool>> ChangePassword(UserChangePassword request)
         {
             var result = await _httpClient.PostAsJsonAsync("api/auth/change-password", request.Password);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
-           
         }
-
         public async Task<ServiceResponse<string>> Login(UserLogin request)
         {
             var result = await _httpClient.PostAsJsonAsync("api/auth/login", request);
