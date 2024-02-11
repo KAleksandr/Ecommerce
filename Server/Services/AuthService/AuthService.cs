@@ -40,29 +40,7 @@ namespace Ecommerce.Server.Services.AuthService
 
             return response;
         }
-        //public async Task<ServiceResponse<string>> Login(string email, string password)
-        //{
-        //    var response = new ServiceResponse<string>();
-        //    var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
-        //    if (user == null)
-        //    {
-        //        response.Success = false;
-        //        response.Message = "User not found";
-        //    }
-        //    else if(!VerifyPasswordHAsh(password, user.PasswordHash, user.PasswordSalt))
-        //    {
-        //        response.Success = false;
-        //        response.Message = "Wrong passsword.";
-        //    }
-        //    else
-        //    {
-        //        response.Success = true;
-        //        response.Data = CreateToken(user);
-        //    }
-
-
-        //    return response;
-        //}
+       
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
@@ -76,7 +54,7 @@ namespace Ecommerce.Server.Services.AuthService
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                                    claims: claims,
-                                   expires: DateTime.UtcNow.AddDays(1),
+                                   expires: DateTime.UtcNow.AddMinutes(2),// AddDays(1),
                                    signingCredentials: cred
    );
                         
