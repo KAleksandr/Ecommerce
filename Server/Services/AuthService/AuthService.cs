@@ -108,8 +108,7 @@ namespace Ecommerce.Server.Services.AuthService
         {
            
             using (var hmac = new HMACSHA512(passwordSalt))
-            {
-               
+            {               
               var  passwordHashG = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return passwordHash.SequenceEqual(passwordHashG); 
             }

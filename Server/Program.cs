@@ -7,7 +7,8 @@ global using Ecommerce.Server.Services.ProductService;
 global using Ecommerce.Server.Services.CategoryService;
 global using Ecommerce.Server.Services.CartService;
 global using Ecommerce.Server.Services.AuthService;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Ecommerce
@@ -19,7 +20,8 @@ namespace Ecommerce
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<DataContext>(options => {
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddControllersWithViews();
@@ -30,6 +32,27 @@ namespace Ecommerce
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                        .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             var app = builder.Build();
             app.UseSwaggerUI();
