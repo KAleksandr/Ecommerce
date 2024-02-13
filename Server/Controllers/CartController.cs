@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Ecommerce.Server.Controllers
 {
@@ -18,6 +19,13 @@ namespace Ecommerce.Server.Controllers
         public async Task<ActionResult<List<CartProductResponse>>> GetProducts(List<CartItem> cartItems)
         {
             var result = await _cartService.GetCartProducts(cartItems);
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = await _cartService.StoreCartItems(cartItems, userId);
             return Ok(result);
         }
     }
