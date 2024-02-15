@@ -1,17 +1,29 @@
 ﻿using Blazored.LocalStorage;
 using Ecommerce.Shared.DTO;
 using Ecommerce.Shared.Model;
+using System.Security.Claims;
 
 namespace Ecommerce.Server.Services.CartService
 {
     public class CartService : ICartService
     {
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartService(DataContext context)
+        public CartService(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        public async Task<ServiceResponse<int>> GetCartItemsCount()
+        {
+            var count = (await _context.CartItems.Where(ci =>ci.UserId == GetUserId()).ToListAsync()).Count();
+            return new ServiceResponse<int> { Data = count };
+        }
+
+       
+
         public async Task<ServiceResponse<List<CartProductResponse>>> GetCartProducts(List<CartItem> cartItems)
         {
             var result = new ServiceResponse<List<CartProductResponse>>
@@ -44,13 +56,13 @@ namespace Ecommerce.Server.Services.CartService
             }
             return result;
         }
-
-        public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems, int userId)
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
-            cartItems.ForEach(cartItem => cartItem.UserId = userId);
+            cartItems.ForEach(cartItem => cartItem.UserId = GetUserId());
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
-            return await GetCartProducts(await _context.CartItems.Where(ci => ci.UserId==userId).ToListAsync());
+            return await GetCartProducts(await _context.CartItems.Where(ci => ci.UserId== GetUserId()).ToListAsync());
         }
     }
 }

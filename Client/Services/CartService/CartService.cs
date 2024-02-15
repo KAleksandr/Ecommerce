@@ -20,7 +20,7 @@ namespace Ecommerce.Client.Services.CartService
 
         public async Task AddToCart(CartItem cartItem)
         {
-            if((await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            if (await IsAuthenticated())
             {
                 Console.WriteLine("User is authenticated");
             }
@@ -28,14 +28,14 @@ namespace Ecommerce.Client.Services.CartService
             {
                 Console.WriteLine("User is not authenticated");
             }
-           var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-            if(cart == null)
+            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+            if (cart == null)
             {
-                cart = new List<CartItem> ();
+                cart = new List<CartItem>();
             }
             var sameItem = cart.Find(x => x.ProductTypeId == cartItem.ProductTypeId && x.ProductId == cartItem.ProductId);
 
-            if(sameItem == null)
+            if (sameItem == null)
             {
                 cart.Add(cartItem);
             }
@@ -43,10 +43,12 @@ namespace Ecommerce.Client.Services.CartService
             {
                 sameItem.Quantity += cartItem.Quantity;
             }
-           
+
             await _localStorage.SetItemAsync("cart", cart);
             OnChange.Invoke();
         }
+
+        
 
         public async Task<List<CartItem>> GetCartItems()
         {
@@ -123,6 +125,10 @@ namespace Ecommerce.Client.Services.CartService
                 OnChange.Invoke();
             }
 
+        }
+        private async Task<bool> IsAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }
