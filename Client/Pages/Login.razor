@@ -30,7 +30,8 @@
     [SupplyParameterFromQuery]
     [Parameter]
     public string? returnUrl { get; set; } = string.Empty;
-    async Task HandleLogin()
+
+    private async Task HandleLogin()
     {
 
         var result = await AuthService.Login(user);
@@ -40,6 +41,7 @@
             await LocalStorage.SetItemAsync("authToken", result.Data);
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
             await CartService.StoreCartItems(true);
+            await CartService.GetCartItemsCount();
             NavigationManager.NavigateTo(returnUrl);
         }
         else

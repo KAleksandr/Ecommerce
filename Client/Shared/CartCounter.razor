@@ -11,9 +11,9 @@
     private int CartItemsCount = 0;
     private int GetCartIremsCount()
     {       
-        var cart = LocalStorage.GetItem<List<CartItem>>("cart");
+        var count = LocalStorage.GetItem<int>("cartItemsCount");
         
-        return cart != null ? cart.Count : 0;
+        return count;
     }
     protected override void OnInitialized()
     {

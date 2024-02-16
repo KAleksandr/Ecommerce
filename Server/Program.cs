@@ -53,6 +53,7 @@ namespace Ecommerce
                     }
                 };
             });
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
             app.UseSwaggerUI();

@@ -57,6 +57,7 @@ namespace Ecommerce.Server.Services.CartService
             return result;
         }
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
             cartItems.ForEach(cartItem => cartItem.UserId = GetUserId());

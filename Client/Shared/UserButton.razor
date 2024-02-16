@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject ICartService CartService
 
+
 <div class="dropdown">
     <button @onclick="ToggleUserMenu"
             @onfocusout="HideUserMenu"
@@ -44,7 +45,8 @@
     }
     private async Task Logout()
     {
-        await LocalStorage.RemoveItemAsync("authToken");        
+        await LocalStorage.RemoveItemAsync("authToken");
+        await CartService.GetCartItemsCount();
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("");
     }
