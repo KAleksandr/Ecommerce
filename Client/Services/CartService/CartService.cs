@@ -2,6 +2,7 @@
 using Ecommerce.Shared.DTO;
 using Ecommerce.Shared.Model;
 using System.Collections.Generic;
+using System.Net.Http.Json;
 
 namespace Ecommerce.Client.Services.CartService
 {
@@ -109,7 +110,7 @@ namespace Ecommerce.Client.Services.CartService
         {
             if (await IsUserAuthenticated())
             {
-            
+                await _http.DeleteAsync($"api/cart/{productId}/{productTypeId}");
             }
             else
             {
@@ -124,10 +125,10 @@ namespace Ecommerce.Client.Services.CartService
                     cart.Remove(carItem);
                     await _localStorage.SetItemAsync("cart", cart);
                 }
-            
                 await GetCartItemsCount();
-            }
 
+            }
+           
         }
 
         public async Task StoreCartItems(bool emptyLocalCart = false)
