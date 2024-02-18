@@ -21,11 +21,11 @@ else
                 </div>
                 <div class="name">
                     <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
-                    <span>@product.ProductType</span><br/>
+                    <span>@product.ProductType</span><br />
                     <input type="number" class="form-control input-quantity" value="@product.Quantity"
                            @onchange="@((ChangeEventArgs e)=>  UpdateQuantity(e,@product))" min="1" />
                     @* <button type="button" class="btn-delete" @onclick="@(() =>
-                        RemoveProductFromCart(product.ProductId, product.ProductTypeId))">Delete</button> *@
+            RemoveProductFromCart(product.ProductId, product.ProductTypeId))">Delete</button> *@
                     <button type="button" class="btn btn-danger btn-del" @onclick="@(() =>
                         RemoveProductFromCart(product.ProductId, product.ProductTypeId))">
                         <i class="oi oi-cart"></i>&nbsp;Delete
@@ -55,14 +55,11 @@ else
     }
     private async Task LoadCart()
     {
-        if ((await CartService.GetCartItems()).Count == 0)
+        await CartService.GetCartItemsCount();
+        cartProducts = await CartService.GetCartProducts();
+        if (cartProducts == null || cartProducts.Count == 0)
         {
             message = "Your cart is empty.";
-            cartProducts = new List<CartProductResponse>();
-        }
-        else
-        {
-            cartProducts = await CartService.GetCartProducts();
         }
     }
     private async Task UpdateQuantity(ChangeEventArgs e, CartProductResponse product)
