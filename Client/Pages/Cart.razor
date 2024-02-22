@@ -1,7 +1,7 @@
 ﻿@page "/cart"
 @using Ecommerce.Shared.DTO
 @inject ICartService CartService
-
+@inject IOrderService OrderService
 
 <PageTitle>Shoping Cart</PageTitle>
 
@@ -38,6 +38,7 @@ else
             Total (@cartProducts.Count): $@cartProducts.Sum(product => @product.Price * product.Quantity)
         </div>
     </div>
+    <button onclick="@PlaceOrder" class="btn alert-success float-end mt-1">Place Order</button>
 }
 
 @code {
@@ -68,5 +69,9 @@ else
         if (product.Quantity < 1)
             product.Quantity = 1;
         await CartService.UpdateQuantity(product);
+    }
+    private async Task PlaceOrder()
+    {
+        await OrderService.PlaceOrder();
     }
 }

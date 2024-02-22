@@ -285,6 +285,6 @@ namespace Ecommerce.Server.Data
         public DbSet<User> Users { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> Items { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }
