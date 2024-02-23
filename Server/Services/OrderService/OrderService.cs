@@ -7,15 +7,15 @@ namespace Ecommerce.Server.Services.OrderService
     {
         private readonly DataContext _context;
         private readonly ICartService _cartService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
        
+        private readonly IAuthService _authService;
 
-        public OrderService(DataContext context, ICartService cartService, IHttpContextAccessor httpContextAccessor)
+        public OrderService(DataContext context, ICartService cartService,  IAuthService authService)
         {
             _context = context;
             _cartService = cartService;
-            _httpContextAccessor = httpContextAccessor;
-            
+           
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> PlaceOrder()
         {
@@ -37,15 +37,15 @@ namespace Ecommerce.Server.Services.OrderService
             {
                 TotalPrice = totalPrice,
                 OrderItems = orderItems,
-                UserId = GetUserId()
+                UserId = _authService.UserId()
             };
             _context.Add(order);
 
-            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == GetUserId()));
+            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.UserId()));
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Success = true };
         }
-        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
     }
 }

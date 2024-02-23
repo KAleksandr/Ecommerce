@@ -12,11 +12,15 @@ namespace Ecommerce.Server.Services.AuthService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(DataContext context, IConfiguration configuration)
+        public AuthService(DataContext context, 
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
@@ -64,24 +68,7 @@ namespace Ecommerce.Server.Services.AuthService
             return jwt;
         }
 
-        //private string? CreateToken(User user)
-        //{
-
-        //    List<Claim> claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        //        new Claim(ClaimTypes.Name, user.Email)                
-        //    };
-        //    var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        //    var token = new JwtSecurityToken(
-        //        claims:claims,
-        //        expires: DateTime.Now.AddDays(1),
-        //        signingCredentials: creds);
-        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-        //    return jwt;
-        //}
+        
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
@@ -157,6 +144,8 @@ namespace Ecommerce.Server.Services.AuthService
 
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
+
+        public int UserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         
     }
 }
