@@ -145,7 +145,7 @@ namespace Ecommerce.Server.Services.AuthService
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
 
-        public int UserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         
     }
 }

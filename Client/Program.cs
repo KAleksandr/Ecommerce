@@ -1,4 +1,5 @@
 global using Ecommerce.Shared;
+global using Ecommerce.Shared.DTO;
 global using Ecommerce.Shared.Model;
 global using System.Net.Http.Json;
 global using Ecommerce.Client.Services.ProductService;

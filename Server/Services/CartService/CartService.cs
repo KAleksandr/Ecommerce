@@ -21,7 +21,7 @@ namespace Ecommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<int>> GetCartItemsCount()
         {
-            var count = (await _context.CartItems.Where(ci =>ci.UserId == _authService.UserId()).ToListAsync()).Count();
+            var count = (await _context.CartItems.Where(ci =>ci.UserId == _authService.GetUserId()).ToListAsync()).Count();
             return new ServiceResponse<int> { Data = count };
         }
 
@@ -63,7 +63,7 @@ namespace Ecommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
-            cartItems.ForEach(cartItem => cartItem.UserId = _authService.UserId());
+            cartItems.ForEach(cartItem => cartItem.UserId = _authService.GetUserId());
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
             return await GetDbCartProducts();
@@ -71,12 +71,12 @@ namespace Ecommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<List<CartProductResponse>>> GetDbCartProducts()
         {
-            return await GetCartProducts(await _context.CartItems.Where(ci => ci.UserId == _authService.UserId()).ToListAsync());
+            return await GetCartProducts(await _context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()).ToListAsync());
         }
 
         public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
         {
-           cartItem.UserId = _authService.UserId();
+           cartItem.UserId = _authService.GetUserId();
             var sameItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId && ci.ProductTypeId == cartItem.ProductTypeId && ci.UserId == cartItem.UserId);
             if (sameItem == null)
             {
@@ -93,7 +93,7 @@ namespace Ecommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
         {
-           var dbCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId && ci.ProductTypeId == cartItem.ProductTypeId && ci.UserId == _authService.UserId());
+           var dbCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId && ci.ProductTypeId == cartItem.ProductTypeId && ci.UserId == _authService.GetUserId());
             if(dbCartItem == null)
             {
                 return new ServiceResponse<bool> { Data = false, Message ="Cart items doesn`t exist.", Success = false };
@@ -109,7 +109,7 @@ namespace Ecommerce.Server.Services.CartService
         public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int productTypeId)
         {
             
-            var dbCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.ProductTypeId == productTypeId && ci.UserId == _authService.UserId());
+            var dbCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.ProductTypeId == productTypeId && ci.UserId == _authService.GetUserId());
             if (dbCartItem == null)
             {
                 return new ServiceResponse<bool> { Data = false, Message = "Cart items doesn`t exist.", Success = false };

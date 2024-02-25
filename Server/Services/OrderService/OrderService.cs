@@ -17,6 +17,35 @@ namespace Ecommerce.Server.Services.OrderService
            
             _authService = authService;
         }
+
+        public async Task<ServiceResponse<List<OrderOverviewResponse>>> GetOrders()
+        {
+            var response = new ServiceResponse<List<OrderOverviewResponse>>();
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Where(o => o.UserId == _authService.GetUserId())
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            var orderResponse = new List<OrderOverviewResponse>();
+            orders.ForEach(o => orderResponse.Add(new OrderOverviewResponse
+            {
+                Id = o.Id,
+                OrderDate = o.OrderDate,
+                TotalPrice = o.TotalPrice,
+                Product = o.OrderItems.Count > 1 ?
+                    $"{o.OrderItems.First().Product.Title} and" +
+                    $" {o.OrderItems.Count - 1} more..." :
+                    o.OrderItems.First().Product.Title,
+                ProductImageUrl = o.OrderItems.First().Product.ImageUrl
+            }));
+
+            response.Data = orderResponse;
+
+            return response;
+        }
+
         public async Task<ServiceResponse<bool>> PlaceOrder()
         {
             var products = (await _cartService.GetDbCartProducts()).Data;
@@ -37,11 +66,11 @@ namespace Ecommerce.Server.Services.OrderService
             {
                 TotalPrice = totalPrice,
                 OrderItems = orderItems,
-                UserId = _authService.UserId()
+                UserId = _authService.GetUserId()
             };
             _context.Add(order);
 
-            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.UserId()));
+            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()));
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Success = true };
