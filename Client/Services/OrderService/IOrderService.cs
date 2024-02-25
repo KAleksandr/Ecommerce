@@ -6,5 +6,6 @@ namespace Ecommerce.Client.Services.OrderService
     {        
         Task PlaceOrder();
         Task<List<OrderOverviewResponse>> GetOrders();
+        Task<OrderDetailsResponse> GetOrdersDetails(int orderId);
     }
 }

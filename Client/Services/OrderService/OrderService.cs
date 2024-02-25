@@ -24,6 +24,12 @@ namespace Ecommerce.Client.Services.OrderService
             return result.Data;
         }
 
+        public async Task<OrderDetailsResponse> GetOrdersDetails(int orderId)
+        {
+            var result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsResponse>>($"api/order/{orderId}");
+            return result.Data;
+        }
+
         public async Task PlaceOrder()
         {
             if(await IsUserAuthenticated())
