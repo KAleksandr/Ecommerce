@@ -45,7 +45,7 @@ namespace Ecommerce.Server.Services.PaymentService
                     "card"
                 },
                 LineItems = lineItems,
-                Mode = "paymant",
+                Mode = "payment",
                 SuccessUrl = "https://localhost:7277/order-success", 
                 CancelUrl = "https://localhost:7277/cart"
             };
