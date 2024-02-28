@@ -30,15 +30,16 @@ namespace Ecommerce.Client.Services.OrderService
             return result.Data;
         }
 
-        public async Task PlaceOrder()
+        public async Task<string> PlaceOrder()
         {
             if(await IsUserAuthenticated())
             {
-                await _http.PostAsync("api/order", null);
+              var result =  await _http.PostAsync("api/payment/checkout", null);
+                return await result.Content.ReadAsStringAsync();
             }
             else
             {
-                _navigationManager.NavigateTo("login");
+                return "login";
             }
             
         }

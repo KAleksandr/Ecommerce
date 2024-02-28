@@ -8,8 +8,10 @@ global using Ecommerce.Server.Services.CategoryService;
 global using Ecommerce.Server.Services.CartService;
 global using Ecommerce.Server.Services.AuthService;
 global using Ecommerce.Server.Services.OrderService;
+global using Ecommerce.Server.Services.PaymentService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+
 
 
 
@@ -35,6 +37,7 @@ namespace Ecommerce
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
