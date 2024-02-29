@@ -85,35 +85,66 @@ namespace Ecommerce.Server.Services.OrderService
             return response;
         }
 
-        public async Task<ServiceResponse<bool>> PlaceOrder()
+        //public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
+        //{
+        //    var products = (await _cartService.GetDbCartProducts(userId)).Data;
+        //    decimal totalPrice = 0;
+        //    var orderItems = new List<OrderItem>();
+        //    products.ForEach(p =>
+        //    {
+        //        totalPrice += p.Price * p.Quantity;
+        //        orderItems.Add(new OrderItem
+        //        {
+        //            ProductId = p.ProductId,
+        //            ProductTypeId = p.ProductTypeId,
+        //            TotalPrice = p.Price * p.Quantity,
+        //            Quantity = p.Quantity,
+        //        });
+        //    });
+        //    var order = new Order
+        //    {
+        //        TotalPrice = totalPrice,
+        //        OrderItems = orderItems,
+        //        UserId = userId
+        //    };
+        //    _context.Add(order);
+
+        //    _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == userId));
+        //    await _context.SaveChangesAsync();
+
+        //    return new ServiceResponse<bool> { Success = true };
+        //}
+        public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
         {
-            var products = (await _cartService.GetDbCartProducts()).Data;
+            var products = (await _cartService.GetDbCartProducts(userId)).Data;
             decimal totalPrice = 0;
+            products.ForEach(product => totalPrice += product.Price * product.Quantity);
+
             var orderItems = new List<OrderItem>();
-            products.ForEach(p =>
+            products.ForEach(product => orderItems.Add(new OrderItem
             {
-                totalPrice += p.Price * p.Quantity;
-                orderItems.Add(new OrderItem
-                {
-                    ProductId = p.ProductId,
-                    ProductTypeId = p.ProductTypeId,
-                    TotalPrice = p.Price * p.Quantity,
-                    Quantity = p.Quantity,
-                });
-            });
+                ProductId = product.ProductId,
+                ProductTypeId = product.ProductTypeId,
+                Quantity = product.Quantity,
+                TotalPrice = product.Price * product.Quantity
+            }));
+
             var order = new Order
             {
+                UserId = userId,
+                OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
-                OrderItems = orderItems,
-                UserId = _authService.GetUserId()
+                OrderItems = orderItems
             };
-            _context.Add(order);
 
-            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()));
+            _context.Orders.Add(order);
+
+            _context.CartItems.RemoveRange(_context.CartItems
+                .Where(ci => ci.UserId == userId));
+
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> { Success = true };
+            return new ServiceResponse<bool> { Data = true };
         }
-        
     }
 }
