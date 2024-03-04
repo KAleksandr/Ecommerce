@@ -58,7 +58,7 @@ namespace Ecommerce.Server.Services.AuthService
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                                    claims: claims,
-                                   expires: DateTime.UtcNow.AddMinutes(2),// AddDays(1),
+                                   expires: DateTime.UtcNow.AddMinutes(30),// AddDays(1),
                                    signingCredentials: cred
    );
                         
@@ -145,7 +145,23 @@ namespace Ecommerce.Server.Services.AuthService
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
 
-        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        //public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        public int GetUserId()
+        {
+            var userIdString = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userIdString != null)
+            {
+                return int.Parse(userIdString);
+            }
+            else
+            {
+                // Обробка випадку, коли ідентифікатор користувача відсутній
+                // Наприклад, повернення за замовчуванням, викидання винятку або інше відповідне рішення
+                //throw new InvalidOperationException("User identifier is missing.");
+                return 0;
+            }
+        }
 
         public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 

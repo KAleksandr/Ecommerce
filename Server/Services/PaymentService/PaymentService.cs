@@ -16,7 +16,7 @@ namespace Ecommerce.Server.Services.PaymentService
             _authService = authService;
             _orderService = orderService;
         }
-        public async Task<Session> CreateCheackoutSessionOut()
+        public async Task<Session> CreateCheckoutSession()
         {
             var products = (await _cartService.GetDbCartProducts()).Data;
             var lineItems = new List<SessionLineItemOptions>();
@@ -30,7 +30,8 @@ namespace Ecommerce.Server.Services.PaymentService
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
                         Name = product.Title,
-                        Images = new List<string> { product.ImageUrl }
+                        Images = new List<string> { product.ImageUrl },
+                       
                     }
                 },
                 Quantity = product.Quantity
@@ -40,6 +41,10 @@ namespace Ecommerce.Server.Services.PaymentService
             var options = new SessionCreateOptions
             {
                 CustomerEmail = _authService.GetUserEmail(),
+                ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+                {
+                    AllowedCountries = new List<string> { "UA" }
+                },
                 PaymentMethodTypes  = new List<string>
                 {
                     "card"
@@ -48,6 +53,7 @@ namespace Ecommerce.Server.Services.PaymentService
                 Mode = "payment",
                 SuccessUrl = "https://localhost:7277/order-success", 
                 CancelUrl = "https://localhost:7277/cart"
+                
             };
             var service = new SessionService();
             Session session = service.Create(options);
@@ -59,16 +65,18 @@ namespace Ecommerce.Server.Services.PaymentService
             var json = await new StreamReader(request.Body).ReadToEndAsync();
             try {
                 var stripeEvent = EventUtility.ConstructEvent(
-                    json, 
-                    request.Headers["Stripe-Signature"], 
-                    secret
+                        json,
+                        request.Headers["Stripe-Signature"],
+                        secret
                     );
-                if(stripeEvent.Type == Events.CheckoutSessionCompleted)
+
+                if (stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {
                     var session = stripeEvent.Data.Object as Session;
-                    var user = _authService.GetUserByEmail(session.CustomerEmail);
+                    var user = await _authService.GetUserByEmail(session.CustomerEmail);
                     await _orderService.PlaceOrder(user.Id);
                 }
+
                 return new ServiceResponse<bool> {Data=true, Success = true };
 
             } catch (StripeException e)

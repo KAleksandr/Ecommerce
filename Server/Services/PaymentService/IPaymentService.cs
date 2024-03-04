@@ -4,7 +4,7 @@ namespace Ecommerce.Server.Services.PaymentService
 {
     public interface IPaymentService
     {
-        Task<Session> CreateCheackoutSessionOut();
+        Task<Session> CreateCheckoutSession();
         Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request);
     }
 }

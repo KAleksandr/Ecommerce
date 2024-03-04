@@ -17,17 +17,18 @@ namespace Ecommerce.Server.Controllers
         [HttpPost("checkout"), Authorize]
         public async Task<ActionResult<string>> CreateCheckoutSession()
         {
-           var session = await _paymentService.CreateCheackoutSessionOut();
+            var session = await _paymentService.CreateCheckoutSession();
             return Ok(session.Url);
         }
+
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder()
         {
             var response = await _paymentService.FulfillOrder(Request);
-            if(!response.Success)
+            if (!response.Success)
                 return BadRequest(response.Message);
+
             return Ok(response);
-           
         }
     }
 }

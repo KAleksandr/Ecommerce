@@ -85,35 +85,7 @@ namespace Ecommerce.Server.Services.OrderService
             return response;
         }
 
-        //public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
-        //{
-        //    var products = (await _cartService.GetDbCartProducts(userId)).Data;
-        //    decimal totalPrice = 0;
-        //    var orderItems = new List<OrderItem>();
-        //    products.ForEach(p =>
-        //    {
-        //        totalPrice += p.Price * p.Quantity;
-        //        orderItems.Add(new OrderItem
-        //        {
-        //            ProductId = p.ProductId,
-        //            ProductTypeId = p.ProductTypeId,
-        //            TotalPrice = p.Price * p.Quantity,
-        //            Quantity = p.Quantity,
-        //        });
-        //    });
-        //    var order = new Order
-        //    {
-        //        TotalPrice = totalPrice,
-        //        OrderItems = orderItems,
-        //        UserId = userId
-        //    };
-        //    _context.Add(order);
-
-        //    _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == userId));
-        //    await _context.SaveChangesAsync();
-
-        //    return new ServiceResponse<bool> { Success = true };
-        //}
+      
         public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
         {
             var products = (await _cartService.GetDbCartProducts(userId)).Data;
