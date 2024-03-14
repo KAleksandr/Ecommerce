@@ -7,6 +7,7 @@ global using Ecommerce.Client.Services.CategoryService;
 global using Ecommerce.Client.Services.CartService;
 global using Ecommerce.Client.Services.AuthService;
 global using Ecommerce.Client.Services.OrderService;
+global using Ecommerce.Client.Services.AddressService;
 global using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -31,6 +32,7 @@ namespace Ecommerce.Client
             builder.Services.AddScoped<ICartService, CartService>();  
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IAddressService, AddressService>();
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
