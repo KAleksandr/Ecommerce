@@ -2,6 +2,7 @@
 @using Ecommerce.Shared.DTO
 @inject ICartService CartService
 @inject IOrderService OrderService
+@inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 <PageTitle>Shoping Cart</PageTitle>
 
@@ -38,17 +39,25 @@ else
             Total (@cartProducts.Count): $@cartProducts.Sum(product => @product.Price * product.Quantity)
         </div>
     </div>
+    @if (isAuthenticated)
+    {
+        <div>
+            <h5>Delivery Address</h5>
+            <AddressForm/>
+        </div>
+        
+    }
     <button onclick="@PlaceOrder" class="btn alert-success float-end mt-1">Checkout</button>
 }
 
 @code {
     List<CartProductResponse> cartProducts = null;
     string message = "Loding cart...";
-    
+    bool isAuthenticated = false;
 
     protected override async Task OnInitializedAsync()
     {
-       
+        isAuthenticated = await AuthService.IsUserAuthenticated();
         await LoadCart();
     }
     private async Task RemoveProductFromCart(int productId, int productTypeId)

@@ -1,8 +1,6 @@
 ﻿@inject IAddressService AddressService
 
 
-<h3>AddressForm</h3>
-
 @if(address == null)
 {
     <span>You haven`t specified a delivery address, yet.
@@ -11,10 +9,11 @@
 }else if (!editAddress)
 {
     <p>
-        <span>@address.FirstName @address.LastName</span>
-        <span>@address.Street @address.City @address.State</span>
-        <span>@address.Country</span>
-        <span>@address.Zip</span>
+        <span>@address.FirstName @address.LastName</span><br/>
+        <span>@address.Street @address.City @address.State</span><br />
+        <span>@address.City @address.State</span>
+        <span>@address.Country</span><br />
+        <span>@address.Zip</span><br />
     </p>
     <button class="btn btn-primary" @onclick="EditAddress">Edit</button>
 }else{
