@@ -10,6 +10,7 @@ namespace Ecommerce.Server.Services.ProductService
         Task<ServiceResponse<ProductSearchResult>> SearchProducts(string searchText, int page);
         Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string searchText);
         Task<ServiceResponse<List<Product>>> GetFeatureProducts();
+        Task<ServiceResponse<List<Product>>> GetAdminProducts();
 
     }
 }

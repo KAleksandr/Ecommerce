@@ -31,14 +31,18 @@
                 <button class="btn btn-primary" @onclick="@(() => EditProductType(productType))">
                     <i class="oi oi-pencil"></i>
                 </button>
+                <button class="btn btn-primary" @onclick="(()=>DeleteProductType(productType.Id))">
+                    <i class="oi oi-trash"></i>
+                </button>
             </div>
+            
         </div>
         
     }
     
 }
 <button class="btn btn-primary" @onclick="CreateNewProductType">
-    <i class="oi oi-plus">Add new product type</i>
+    <i class="oi oi-plus">  Add new product type</i>
 </button>
 @code {
     ProductType editingProductType = null;
@@ -71,5 +75,10 @@
             await ProductTypeService.UpdateProductType(editingProductType);
         }
         editingProductType = new ProductType();
+    }
+    private async Task DeleteProductType(int id)
+    {
+        await ProductTypeService.DeleteProductType(id);
+
     }
 }

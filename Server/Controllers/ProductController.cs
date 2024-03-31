@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Shared.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Server.Controllers
@@ -12,6 +13,12 @@ namespace Ecommerce.Server.Controllers
         public ProductController(IProductService productService)
         {
             _productService = productService;
+        }
+        [HttpGet("admin"), Authorize(Roles ="Admin")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAdninProducts()
+        {
+            var result = await _productService.GetAdminProducts();
+            return Ok(result);
         }
         /// <summary>
         /// Get list products

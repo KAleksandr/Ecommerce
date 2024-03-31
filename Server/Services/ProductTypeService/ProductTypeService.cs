@@ -15,6 +15,7 @@ namespace Ecommerce.Server.Services.ProductTypeService
 
         public async Task<ServiceResponse<List<ProductType>>> AddProductType(ProductType productType)
         {
+            productType.Editing = productType.IsNew = false;
             _context.ProductTypes.Add(productType);
             await _context.SaveChangesAsync();
             return await GetProductTypes();
@@ -23,9 +24,15 @@ namespace Ecommerce.Server.Services.ProductTypeService
         public async Task<ServiceResponse<List<ProductType>>> DeleteProductType(int id)
         {
             var dbProductType = await _context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == id);
-            _context.ProductTypes.Remove(dbProductType);
+            if (dbProductType == null)
+            {
+                return new ServiceResponse<List<ProductType>> { Success = false, Message = "Sorry, but this productType does not exist" };
+            }
+           // dbProductType.Delited = true;            
             await _context.SaveChangesAsync();
             return await GetProductTypes();
+
+            
         }
 
         public async Task<ServiceResponse<List<ProductType>>> GetProductTypes()

@@ -22,6 +22,7 @@ namespace Ecommerce.Client.Services.ProductTypeService
             var result = await _http.PostAsJsonAsync("api/producttype", productType);
             ProductTypes = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
+            
         }
 
         public ProductType CreateNewProductType()
@@ -37,6 +38,7 @@ namespace Ecommerce.Client.Services.ProductTypeService
             var result = await _http.DeleteAsync($"api/producttype/{id}");
             ProductTypes = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
+           
         }
 
         public async Task GetProductTypes()
@@ -51,6 +53,7 @@ namespace Ecommerce.Client.Services.ProductTypeService
             var result = await _http.PutAsJsonAsync("api/producttype", productType);
             ProductTypes = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
+            
         }
     }
 }
