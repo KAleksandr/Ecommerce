@@ -21,7 +21,7 @@ namespace Ecommerce.Shared.Model
         public bool Featured { get; set; }
         public List<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
         public bool Visible { get; set; } = true;
-        public bool Delited { get; set; } = false;
+        public bool Deleted { get; set; } = false;
         [NotMapped]
         public bool Editing { get; set; } = false;
         [NotMapped]

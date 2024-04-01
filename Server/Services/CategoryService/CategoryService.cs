@@ -26,7 +26,7 @@ namespace Ecommerce.Server.Services.CategoryService
             {
                 return new ServiceResponse<List<Category>> { Success = false, Message = "Sorry, but this category does not exist" };
             }
-            category.Delited = true;
+            category.Deleted = true;
             await _context.SaveChangesAsync();
             return await GetAdminCategories();
         }
@@ -38,7 +38,7 @@ namespace Ecommerce.Server.Services.CategoryService
 
         public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
         {
-            var categories = await _context.Categories.Where(c => !c.Delited).ToListAsync();
+            var categories = await _context.Categories.Where(c => !c.Deleted).ToListAsync();
 
             return new ServiceResponse<List<Category>>()
             {
@@ -48,7 +48,7 @@ namespace Ecommerce.Server.Services.CategoryService
 
         public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
-            var categories = await _context.Categories.Where(c => !c.Delited && c.Visible).ToListAsync();
+            var categories = await _context.Categories.Where(c => !c.Deleted && c.Visible).ToListAsync();
             
             return new ServiceResponse<List<Category>>()
             {

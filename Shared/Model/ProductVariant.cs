@@ -20,7 +20,7 @@ namespace Ecommerce.Shared.Model
         [Column(TypeName = "decimal(18,2)")]
         public decimal OriginalPrice { get; set; }
         public bool Visible { get; set; } = true;
-        public bool Delited { get; set; } = false;
+        public bool Deleted { get; set; } = false;
         [NotMapped]
         public bool Editing { get; set; } = false;
         [NotMapped]

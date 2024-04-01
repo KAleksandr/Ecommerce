@@ -14,12 +14,25 @@ namespace Ecommerce.Server.Controllers
         {
             _productService = productService;
         }
-        [HttpGet("admin"), Authorize(Roles ="Admin")]
+        [HttpPost, Authorize(Roles ="Admin")]
+        public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product)
+        {
+            var result = await _productService.CreateProduct(product);
+            return Ok(result);
+        }
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteAdninProduct(int id)
+        {
+            var result = await _productService.DeleteProduct(id);
+            return Ok(result);
+        }
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAdninProducts()
         {
             var result = await _productService.GetAdminProducts();
             return Ok(result);
         }
+      
         /// <summary>
         /// Get list products
         /// </summary>

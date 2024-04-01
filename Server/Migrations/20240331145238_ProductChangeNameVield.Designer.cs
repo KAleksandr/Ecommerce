@@ -4,6 +4,7 @@ using Ecommerce.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240331145238_ProductChangeNameVield")]
+    partial class ProductChangeNameVield
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -441,7 +444,7 @@ namespace Ecommerce.Server.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Deleted")
+                    b.Property<bool>("Delited")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("OriginalPrice")
@@ -464,7 +467,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 1,
                             ProductTypeId = 2,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 19.99m,
                             Price = 9.99m,
                             Visible = true
@@ -473,7 +476,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 1,
                             ProductTypeId = 3,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 7.99m,
                             Visible = true
@@ -482,7 +485,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 1,
                             ProductTypeId = 4,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 29.99m,
                             Price = 19.99m,
                             Visible = true
@@ -491,7 +494,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 2,
                             ProductTypeId = 2,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 14.99m,
                             Price = 7.99m,
                             Visible = true
@@ -500,7 +503,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 3,
                             ProductTypeId = 2,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 6.99m,
                             Visible = true
@@ -509,7 +512,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 4,
                             ProductTypeId = 5,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 3.99m,
                             Visible = true
@@ -518,7 +521,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 4,
                             ProductTypeId = 6,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 9.99m,
                             Visible = true
@@ -527,7 +530,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 4,
                             ProductTypeId = 7,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 19.99m,
                             Visible = true
@@ -536,7 +539,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 5,
                             ProductTypeId = 5,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 3.99m,
                             Visible = true
@@ -545,7 +548,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 6,
                             ProductTypeId = 5,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 2.99m,
                             Visible = true
@@ -554,7 +557,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 7,
                             ProductTypeId = 8,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 29.99m,
                             Price = 19.99m,
                             Visible = true
@@ -563,7 +566,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 7,
                             ProductTypeId = 9,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 69.99m,
                             Visible = true
@@ -572,7 +575,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 7,
                             ProductTypeId = 10,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 59.99m,
                             Price = 49.99m,
                             Visible = true
@@ -581,7 +584,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 8,
                             ProductTypeId = 8,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 24.99m,
                             Price = 9.99m,
                             Visible = true
@@ -590,7 +593,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 9,
                             ProductTypeId = 8,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 0m,
                             Price = 14.99m,
                             Visible = true
@@ -599,7 +602,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 10,
                             ProductTypeId = 1,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 299m,
                             Price = 159.99m,
                             Visible = true
@@ -608,7 +611,7 @@ namespace Ecommerce.Server.Migrations
                         {
                             ProductId = 11,
                             ProductTypeId = 1,
-                            Deleted = false,
+                            Delited = false,
                             OriginalPrice = 399m,
                             Price = 79.99m,
                             Visible = true

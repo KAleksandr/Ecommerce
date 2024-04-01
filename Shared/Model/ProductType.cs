@@ -11,7 +11,7 @@ namespace Ecommerce.Shared.Model
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public bool Delited { get; set; } = false;
+        public bool Deleted { get; set; } = false;
         [NotMapped]
         public bool Editing { get; set; } = false;
         [NotMapped]
