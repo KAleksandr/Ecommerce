@@ -72,14 +72,13 @@ namespace Ecommerce.Client.Services.ProductService
 
         public async Task GetAdminProducts()
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/admin");
+            var result = await _http
+                .GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product/admin");
             AdminProducts = result.Data;
             CurrentPage = 1;
             PageCount = 0;
-            if(AdminProducts.Count == 0)
-            {
+            if (AdminProducts.Count == 0)
                 Message = "No products found.";
-            }
         }
 
         public async Task<Product> CreateProduct(Product product)
