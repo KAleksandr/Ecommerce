@@ -4,6 +4,7 @@
 @inject IProductTypeService ProductTypeService
 @inject ICategoryService CategoryService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 @if (loading)
 {
@@ -65,14 +66,14 @@ else
                     <InputCheckbox @bind-Value="variant.Visible" style="transform:scale(1.5,1.5);" disabled="@variant.Deleted"></InputCheckbox>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" disabled="@variant.Deleted" @onclick="@(()=> RemoveVariant(variant.ProductTypeId))">
+                    <button type="button" class="btn btn-primary" disabled="@variant.Deleted" @onclick="@(()=> RemoveVariant(variant.ProductTypeId))">
                         <i class="oi oi-trash"></i>
                     </button>
                 </div>
             </div>
         }
-        <button class="btn btn-primary" @onclick="AddVariant">
-            <i class="oi-plus"/> Add Variant
+        <button type="button" class="btn btn-primary" @onclick="AddVariant">
+            <i class="oi oi-plus"/> Add Variant
         </button>
         <hr/>
         <div class="mb-0">
@@ -96,6 +97,12 @@ else
         <button type="submit" class="btn btn-primary float-end">@btnText</button>
         <ValidationSummary></ValidationSummary>
     </EditForm>
+    @if (!product.IsNew)
+    {
+        <button type="button" class="btn btn-danger float-start" @onclick="DeleteProduct">
+            Delete Product
+        </button>
+    }
 }
 
 @code {
@@ -164,5 +171,16 @@ else
     void AddVariant()
     {
         product.Variants.Add(new ProductVariant { IsNew = true,ProductId = product.Id});
+    }
+    async void DeleteProduct()
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+        $"Do you really want to delete '{product.Title}'?");
+        if (confirmed)
+        {
+            await ProductService.DeleteProduct(product);
+            NavigationManager.NavigateTo("admin/products");
+        }
+       
     }
 }

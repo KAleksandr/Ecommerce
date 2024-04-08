@@ -20,6 +20,12 @@ namespace Ecommerce.Server.Controllers
             var result = await _productService.CreateProduct(product);
             return Ok(result);
         }
+        [HttpPut, Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Product>>> UpdateProduct(Product product)
+        {
+            var result = await _productService.UpdateProduct(product);
+            return Ok(result);
+        }
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteAdninProduct(int id)
         {
