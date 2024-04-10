@@ -58,6 +58,7 @@ namespace Ecommerce.Server.Services.ProductService
                 .Include(p => p.Variants
                 .Where(v =>  !v.Deleted))
                 .ThenInclude(v => v.ProductType)
+                .Include(p => p.Images)
                 .ToListAsync()
             };
             return response;
@@ -67,7 +68,7 @@ namespace Ecommerce.Server.Services.ProductService
         {
            var response = new ServiceResponse<List<Product>>
            {
-               Data = await _context.Products.Where(p => p.Featured && p.Visible && !p.Deleted).Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).ToListAsync()
+               Data = await _context.Products.Where(p => p.Featured && p.Visible && !p.Deleted).Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).Include(p => p.Images).ToListAsync()
            };
            return response;
         }
@@ -79,11 +80,14 @@ namespace Ecommerce.Server.Services.ProductService
 
             if (_httpContextAccessor.HttpContext.User.IsInRole("Admin"))
             {
-                product = await _context.Products.Include(p => p.Variants.Where(v =>  !v.Deleted)).ThenInclude(v => v.ProductType).FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted );
+                product = await _context.Products.Include(p => p.Variants.Where(v =>  !v.Deleted))
+                    .ThenInclude(v => v.ProductType)
+                    .Include(p=>p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted );
             }
             else
             {
-                product = await _context.Products.Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).ThenInclude(v => v.ProductType).FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted && p.Visible);
+                product = await _context.Products.Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).ThenInclude(v => v.ProductType).Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted && p.Visible);
             }
 
            
@@ -104,7 +108,7 @@ namespace Ecommerce.Server.Services.ProductService
             {
                 Data = await _context.Products
                 .Where(p=> p.Visible && !p.Deleted)
-                .Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).ToListAsync()
+                .Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).Include(p => p.Images).ToListAsync()
             };
             return response;
         }
@@ -152,7 +156,7 @@ namespace Ecommerce.Server.Services.ProductService
             var products = await _context.Products
                 .Where(p => (p.Title.ToLower().Contains(searchText.ToLower())
                 || p.Description.ToLower().Contains(searchText.ToLower())) && p.Visible && !p.Deleted
-                ).Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).Skip((page -1) * (int)pageResults).Take((int)pageResults).ToListAsync();
+                ).Include(p => p.Variants.Where(v => v.Visible && !v.Deleted)).Include(p => p.Images).Skip((page -1) * (int)pageResults).Take((int)pageResults).ToListAsync();
                 
 
             var response = new ServiceResponse<ProductSearchResult>
@@ -169,7 +173,7 @@ namespace Ecommerce.Server.Services.ProductService
 
         public async Task<ServiceResponse<Product>> UpdateProduct(Product product)
         {
-            var dbProduct = await _context.Products.FindAsync(product.Id);
+            var dbProduct = await _context.Products.Include(p => p.Images).FirstOrDefaultAsync(P => P.Id == product.Id);
             if (dbProduct == null)
             {
                 return new ServiceResponse<Product> {  Success = false, Message = "Sorry, but this product does not exist" };
@@ -180,7 +184,13 @@ namespace Ecommerce.Server.Services.ProductService
             dbProduct.CategoryId = product.CategoryId;  
             dbProduct.Visible = product.Visible;
             dbProduct.Featured = product.Featured;
-            foreach(var variant in product.Variants)
+
+            var productImages = dbProduct.Images;
+            _context.Images.RemoveRange(productImages);
+
+            dbProduct.Images = product.Images;
+
+            foreach (var variant in product.Variants)
             {
                 var dbVariant = await _context.ProductVariants
                     .SingleOrDefaultAsync(v => v.ProductId == variant.ProductId && v.ProductTypeId == variant.ProductTypeId);
