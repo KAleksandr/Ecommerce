@@ -13,6 +13,7 @@ global using Ecommerce.Server.Services.AddressService;
 global using Ecommerce.Server.Services.ProductTypeService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MudBlazor.Services;
 
 
 
@@ -65,6 +66,7 @@ namespace Ecommerce
                 };
             });
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddMudServices();
 
             var app = builder.Build();
             app.UseSwaggerUI();
